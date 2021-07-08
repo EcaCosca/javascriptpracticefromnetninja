@@ -1,24 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <title>JavaScript</title>
-</head>
-<body>
-    <h1 style="color:orange;">The DOM</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Events</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 16px;
+        font-weight: 300;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.5;
+        color: #eee;
+        background-color: #333;
+      }
+      body {
+        background-color: #333;
+        min-height: 100vh;
+      }
+      header {
+        padding: 1rem 2rem;
+      }
+      h1 {
+        color: orange;
+      }
+      h2 {
+        color: orangered;
+      }
+      form > p {
+        padding: 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        box-sizing: border-box;
+      }
+      label {
+        font-size: 1rem;
+        flex-basis: 30%;
+        padding: 0.25rem 1px;
+        text-align: start;
+      }
+      input {
+        font-size: 1rem;
+        flex-basis: 100%;
+        width: calc(100% - 2px);
+        padding: 0.25rem 1rem;
+      }
+      select,
+      option {
+        font-size: 1rem;
+        flex-basis: 100%;
+        width: calc(100% - 2px);
+        padding: 0.25rem 1rem;
+      }
+      button {
+        border: none;
+        background-color: cornflowerblue;
+        color: #fff;
+        flex-basis: 100%;
+        width: calc(100% - 2px);
+        padding: 0.5rem 1rem;
+        font-size: 1.5rem;
+      }
+      button:focus {
+        background-color: lemonchiffon;
+      }
+      /* input[type='submit']:focus{
+        background-color:cornflowerblue;
+      } */
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>HTML Form Events</h1>
+      <h2>Input - Submit</h2>
+      <h3>Change - Focus - Blur</h3>
+      <h3>Click - MouseDown - MouseUp</h3>
+      <h3>KeyDown - KeyUp - KeyPress</h3>
+    </header>
+    <main>
+      <form name="sampleForm" action="#" method="POST">
+        <p>
+          <label for="name">Username</label>
+          <input
+            type="text"
+            id="name"
+            enterkeyhint="next"
+            placeholder=""
+            value=""
+            maxlength="50"
+            autocomplete="off"
+          />
+        </p>
+        <p>
+          <label for="email">Email</label>
+          <input
+            type="email"
+            inputmode="email"
+            id="email"
+            enterkeyhint="next"
+            placeholder=""
+            autocomplete="off"
+          />
+        </p>
+        <p>
+          <label for="phone">Cellphone</label>
+          <input
+            type="tel"
+            inputmode="tel"
+            id="phone"
+            enterkeyhint="next"
+            placeholder=""
+            autocomplete="off"
+          />
+        </p>
+        <p>
+          <label for="pass">Password</label>
+          <input
+            type="password"
+            id="pass"
+            enterkeyhint="send"
+            placeholder=""
+            autocomplete="off"
+          />
+        </p>
+        <p>
+          <label for="lang">Language</label>
+          <select id="lang">
+            <option value="en" lang="en">English</option>
+            <option value="sv" lang="sv" selected>Svensk</option>
+            <option value="ru" lang="ru">Русский</option>
+            <option value="de" lang="de">Deutsch</option>
+            <option value="es" lang="es">Español</option>
+            <option value="fr" lang="fr">Français</option>
+          </select>
+        </p>
+        <p>
+          <button id="btnSend">Send</button>
+        </p>
+      </form>
+    </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        //add event listeners to form elements
+        //name email phone pass lang btnSend
+        let name = document.getElementById('name');
+        let email = document.getElementById('email');
+        let phone = document.getElementById('phone');
+        let pass = document.getElementById('pass');
+        let lang = document.getElementById('lang');
+        let btn = document.getElementById('btnSend');
+        let form = document.sampleForm;
 
-    <p>lorem error ipsum</p>
-    <p>lorem success ipsum</p>
-    <p>lorem ipsum lorem</p>
-    <p>lorem ipsum success</p>
-    <p>error lorem ipsum</p>
-    <p>lorem ipsum lorem</p>
-    <p>lorem ipsum error</p>
-    <p>success lorem ipsum</p>
+        name.addEventListener('change', handleChange);
+        name.addEventListener('input', handleInput);
+        //input: better for validation than change in most cases
+        name.addEventListener('keypress', handleKey);
+        name.addEventListener('keydown', handleKey);
+        name.addEventListener('keyup', handleKey);
+        name.addEventListener('focus', handleFocus);
+        name.addEventListener('blur', handleBlur);
+        //blur: used to be used like placeholder
+        //blur or change: can be used for validation when pattern needed
+        name.addEventListener('click', handleMouse);
+        name.addEventListener('mousedown', handleMouse);
+        name.addEventListener('mouseup', handleMouse);
 
-    <script src="sandbox.js"></script>
-</body>
+        email.addEventListener('focus', handleFocus);
+        email.addEventListener('blur', handleBlur);
+        phone.addEventListener('focus', handleFocus);
+        phone.addEventListener('blur', handleBlur);
+        pass.addEventListener('blur', handleBlur);
+
+        lang.addEventListener('change', handleChange);
+        lang.addEventListener('input', handleInput);
+
+        //handle form submission
+        form.addEventListener('submit', handleSend);
+        btn.addEventListener('click', handleSend);
+        //even with enter key
+        document.addEventListener('keypress', (ev) => {
+          console.log({ ev });
+        });
+      });
+
+      function handleChange(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+      }
+      function handleInput(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+      }
+
+      function handleFocus(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+      }
+      function handleBlur(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+      }
+
+      function handleMouse(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+      }
+      function handleKey(ev) {
+        console.log(ev.type.toUpperCase(), ev.target.id, ev.target.value);
+        let code = ev.keyCode || ev.which;
+        if (code == 10 || code == 13) {
+          //return or enter key
+          handleSend(ev);
+        }
+      }
+
+      function handleSend(ev) {
+        ev.preventDefault();
+        //stop the form from submitting and reloading the page
+        console.log(ev.type.toUpperCase(), 'Submitting the Form');
+      }
+    </script>
+  </body>
 </html>
